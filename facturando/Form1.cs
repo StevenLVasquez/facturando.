@@ -28,7 +28,7 @@ namespace facturando
             {
 
                 conexion.Open();
-                string consulta = ("select item,cantidad,descripcion,PU, PU*cantidad as total  from factura");
+                string consulta = ("select item,cantidad,descripcion,PU, PU*CANTIDAD AS TOTAL from factura");
                 SqlCommand comando = new SqlCommand(consulta, conexion);
                 SqlDataAdapter adapter = new SqlDataAdapter(comando);
                 DataSet dataSet = new DataSet();
@@ -56,15 +56,18 @@ namespace facturando
                         int item = int.Parse(row.Cells[0].Value.ToString());
                         int cantidad = int.Parse(row.Cells[1].Value.ToString());
                         string descripcion = row.Cells[2].Value.ToString();
-                        double PU = double.Parse(row.Cells[0].Value.ToString());
+                        double PU = double.Parse(row.Cells[3].Value.ToString());
+                        // row.Cells[4].Value = (cantidad * PU);
 
-                        string consulta = "INSERT INTO factura(item,cantidad,descripcion,PU) VALUES (@item, @cantidad, @descripcion, @PU)";
+                        string consulta = "INSERT INTO factura(item,cantidad,descripcion,PU) VALUES (@item,@cantidad,@descripcion,@PU)";
                         SqlCommand comando = new SqlCommand(consulta, conexion);
 
                         comando.Parameters.AddWithValue("@item", item);
                         comando.Parameters.AddWithValue("@cantidad", cantidad);
                         comando.Parameters.AddWithValue("@descripcion", descripcion);
                         comando.Parameters.AddWithValue("@PU", PU);
+
+
                         comando.ExecuteNonQuery();
                     }
                 }
@@ -82,13 +85,21 @@ namespace facturando
             }
         }
 
-        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+       /* private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow row = ((DataGridViewRow)(dataGridView2.Rows[e.RowIndex]));
+            double cantidad = Convert.ToDouble(row.Cells[1].Value);
+            double PU = Convert.ToDouble(row.Cells[3].Value);
+            row.Cells[4].Value = (cantidad * PU);
+
+        }*/
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             DataGridViewRow row = ((DataGridViewRow)(dataGridView1.Rows[e.RowIndex]));
             double cantidad = Convert.ToDouble(row.Cells[1].Value);
             double PU = Convert.ToDouble(row.Cells[3].Value);
             row.Cells[4].Value = (cantidad * PU);
-
         }
     }
 }
