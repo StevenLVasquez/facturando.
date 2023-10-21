@@ -103,3 +103,7 @@ namespace facturando
         }
     }
 }
+
+// Form1 form1 = new Form1
+// form1.Show();
+
